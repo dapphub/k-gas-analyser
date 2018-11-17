@@ -1,0 +1,1 @@
+((VGas - 1257) - ( 700 + ( VGas - 1957 - ( VGas - 1957 ) / 64 ) ) + #if notBool ABI_x == 0 #then ((VGas - 1957) - ( VGas - 1957 ) / 64) - 20491 #else ((VGas - 1957)  - ( VGas - 1957 ) / 64) - 5491 #fi) - 41
