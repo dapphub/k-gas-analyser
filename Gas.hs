@@ -5,16 +5,16 @@ data GasExpr = Nullary NullOp
   | Unary UnOp GasExpr
   | Binary BinOp GasExpr GasExpr
   | ITE Cond GasExpr GasExpr
-  deriving Show
+  deriving (Eq, Show)
 
 data NullOp = StartGas | Literal Int
-  deriving Show
+  deriving (Eq, Show)
 data UnOp = SixtyFourth
-  deriving Show
+  deriving (Eq, Show)
 data BinOp = Add | Sub
-  deriving Show
+  deriving (Eq, Show)
 data Cond = Cond String
-  deriving Show
+  deriving (Eq, Show)
 
 bracket :: String -> String
 bracket s = "( " ++ s ++ " )"
