@@ -62,8 +62,9 @@ kastToGasExpr kast = case node kast of
         Left error -> Left error
         Right e -> case kastToGasExpr arg2 of
           Left error -> Left error
-          Right f -> Right $ ITE (Cond c) e f
-            where Right c = formatKast arg_c
+          Right f -> case formatKast arg_c of
+            Left error -> Left error
+            Right c -> Right $ ITE (Cond c) e f
     Just somelabel -> Left $ "Unknown KApply in gas expression: " ++ somelabel
    
 formatKast :: Kast -> Either String String
@@ -72,6 +73,7 @@ formatKast kast = case node kast of
   
   "KToken" -> case sort kast of
     Just "Int" -> let Just n = token kast in Right n
+    Just "K" -> let Just n = token kast in Right n
     Just somesort -> Left $ "Unknown sort: " ++ somesort
     
   "KApply" -> let Just func = label kast
