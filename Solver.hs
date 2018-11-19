@@ -1,4 +1,5 @@
 module Solver where
+
 import Data.List (findIndex)
 
 import Gas
@@ -41,10 +42,6 @@ solveLeaves (ITE c e f) = ITE c e' f'
         f' = solveLeaves f
 solveLeaves e = Nullary (Literal minG)
   where Just minG = minimiseG e
-
--- solve :: GasExpr -> GasExpr
--- solve e = Nullary (Literal minG)
---   where Just minG = minimiseG e
 
 evalUnOp :: UnOp -> Int -> Int
 evalUnOp SixtyFourth x = quot x 64

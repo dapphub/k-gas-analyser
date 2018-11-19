@@ -1,5 +1,8 @@
+-- This module is for parsing string-formatted K Gas Expressions
 module Parser where
+
 import Text.ParserCombinators.Parsec
+
 import Gas
 
 parseStartGas :: Parser GasExpr
@@ -58,26 +61,42 @@ manyTillEnd p q = do
 -- the contents of which we don't care about
 -- so we cheat and just count the #ifs
 parseCond :: Parser Cond
-parseCond = do
-  s <- manyTillEnd anyChar (string "#then")
-  return $ Cond s
+parseCond = parseCondCounting 0
+-- simple naive way which breaks if there are #ifs in the condition:
+-- parseCond = do
+--   s <- manyTillEnd anyChar (string "#then ")
+--   return $ Cond s
 
--- parseCondCounting :: Int -> Parser Cond
--- parseCondCounting depth = do
---   manyTill anyChar (try $ string "#if")
+-- TODO: find a better way to do this?
+parseCondCounting :: Int -> Parser Cond
+parseCondCounting depth = do
+   s <- manyTillEnd anyChar (try (string "#if ")
+                          <|> try (string "#fi ")
+                          <|> try (string "#then "))
+   try (do t <- string "#if"
+           Cond u <- parseCondCounting (depth+1)
+           return $ Cond $ s++t++u)
+     <|> try (do t <- string "#fi"
+                 Cond u <- parseCondCounting (depth-1)
+                 return $ Cond $ s++t++u)
+     <|> try (if depth == 0
+              then return $ Cond s
+              else do t <- string "#then"
+                      Cond u <- parseCondCounting depth
+                      return $ Cond $ s++t++u)
 
 parseITE :: Parser GasExpr
 parseITE = do
-  string "#if"
+  string "#if "
   spaces
   c <- parseCond
-  string "#then"
+  string "#then "
   spaces
   x <- parseGasExpr
-  string "#else"
+  string "#else "
   spaces
   y <- parseGasExpr
-  string "#fi"
+  string "#fi "
   return $ ITE c x y
 
 parseBracketed :: Parser GasExpr
@@ -109,3 +128,4 @@ readGasExpr :: String -> Either String GasExpr
 readGasExpr s = case parse parseGasExpr "K Gas Expression" s of
   Left error -> Left $ "Parse error: " ++ show error
   Right result -> Right result
+ 
