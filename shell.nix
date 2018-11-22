@@ -2,7 +2,7 @@
 let
   inherit (nixpkgs) pkgs;
   ghc = pkgs.haskell.packages.${compiler}.ghcWithPackages (ps: with ps; [
-          monad-par mtl parsec cabal-install hoogle
+          cabal-install utf8-string aeson parsec safe optparse-applicative
         ]);
 in
 pkgs.stdenv.mkDerivation {
