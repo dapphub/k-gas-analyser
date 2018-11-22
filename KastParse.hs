@@ -72,17 +72,36 @@ formatKast kast = case node kast of
   "KVariable" -> let Just var = name kast in Right var
   
   "KToken" -> case sort kast of
-    Just "Int" -> let Just n = token kast in Right n
+    Just "Int"  -> let Just n = token kast in Right n
+    Just "Bool" -> let Just n = token kast in Right n
     Just "K" -> let Just n = token kast in Right n
     Just somesort -> Left $ "Unknown sort: " ++ somesort
     
-  "KApply" -> let Just func = label kast
-                  Just apply_args = args kast
-                  lr_formatted_args = map formatKast apply_args
-              in case lefts lr_formatted_args of
+  "KApply" -> let Just func         = label kast
+                  Just apply_args   = args kast
+                  lr_fargs = map formatKast apply_args
+                  fargs    = rights lr_fargs
+              in case lefts lr_fargs of
                    error:_ -> Left error
-                   [] -> Right $ (func ++ "(" ++ args_commas ++ ")")
-                     where args_commas = intercalate " , " formatted_args
-                           formatted_args = rights lr_formatted_args
+                   [] -> case formatKApply func fargs of
+                     Left error -> Left error
+                     Right x    -> Right x
 
+formatKApply :: String -> [String] -> Either String String
+formatKApply func fargs = let bracket s = "( " ++ s ++ " )" in
+  case (head func, last func, fargs) of
+    -- binary infix
+    ('_', '_', (farg1:(farg2:[]))) -> Right $ bracket $ farg1 ++ " " ++ func_trim ++ " " ++ farg2
+      where func_trim = tail $ init $ func
+    -- unsupported mixfix
+    ('_', '_', _) -> Left $ "Couldn't parse mixfix operator: " ++ func
+    -- unary prefix
+    (_, '_', (farg:[])) -> Right $ bracket $ func_trim ++ farg
+      where func_trim = init $ func
+    -- unary postfix
+    ('_', _, (farg:[])) -> Right $ bracket $ farg ++ func_trim
+      where func_trim = tail $ func
+    -- n-ary prefix
+    (_, _, _) -> Right $ bracket $ func_trim ++ (bracket (intercalate " ,, " fargs))
+      where func_trim = "`" ++ func ++ "`"
     
