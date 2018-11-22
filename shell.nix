@@ -1,7 +1,7 @@
-{ nixpkgs ? import <nixpkgs> {}, compiler ? "ghc843" }:
+{ nixpkgs ? import <nixpkgs> {}}:
 let
   inherit (nixpkgs) pkgs;
-  ghc = pkgs.haskell.packages.${compiler}.ghcWithPackages (ps: with ps; [
+  ghc = pkgs.haskellPackages.ghcWithPackages (ps: with ps; [
           cabal-install utf8-string aeson parsec safe optparse-applicative
         ]);
 in
