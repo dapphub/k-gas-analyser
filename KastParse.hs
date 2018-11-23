@@ -102,6 +102,6 @@ formatKApply func fargs = let bracket s = "( " ++ s ++ " )" in
     ('_', _, (farg:[])) -> Right $ bracket $ farg ++ func_trim
       where func_trim = tail $ func
     -- n-ary prefix
-    (_, _, _) -> Right $ bracket $ func_trim ++ (bracket (intercalate " ,, " fargs))
+    (_, _, _) -> Right $ bracket $ func_trim ++ (bracket (intercalate " , " fargs))
       where func_trim = "`" ++ func ++ "`"
     
