@@ -12,5 +12,5 @@ $ make
 ### example usage
 
 ```sh
-$ ./dist/build/k-gas-analyser/k-gas-analyser --input examples/Token_transfer_pass.kast.json
+$ ./result/bin/k-gas-analyser --input examples/Token_transfer_pass.kast.json
 ```

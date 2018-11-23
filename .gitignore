@@ -1,2 +1,3 @@
 dist/
-.configured
+dist-newstyle/
+result
