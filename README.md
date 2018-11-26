@@ -1,4 +1,5 @@
 # k-gas-analyser
+[![Build Status](https://travis-ci.com/dapphub/k-gas-analyser.svg?branch=master)](https://travis-ci.com/dapphub/k-gas-analyser)
 
 ### installation
 
