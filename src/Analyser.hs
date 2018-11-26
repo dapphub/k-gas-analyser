@@ -73,4 +73,4 @@ main = do
     Left err -> (putStrLn $ "Failed in parsing AST: " ++ err) >> die
     -- solve GasExpr, unparse, and print
     Right g -> let solution = unparse $ (solve maxG) $ g
-      in (putStr solution) >> exit
+      in (putStrLn solution) >> exit
