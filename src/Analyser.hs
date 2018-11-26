@@ -6,6 +6,7 @@ import System.Environment        (getArgs)
 import System.Exit               (exitWith,
                                   ExitCode(ExitSuccess),
                                   ExitCode(ExitFailure))
+import Data.Semigroup            ((<>))
 import Options.Applicative
 
 import Solver    (solve)
