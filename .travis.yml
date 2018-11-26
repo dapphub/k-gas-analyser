@@ -2,6 +2,10 @@ os:
   - linux
   - osx
 language: nix
+sudo: required
+# workaround for a macOS specific issue with trusted users
+before_install:
+  - export LANG=en_US.UTF-8
 script: |
         make
         make test
