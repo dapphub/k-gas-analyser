@@ -1,0 +1,4 @@
+language: nix
+script: |
+        make
+        make test
